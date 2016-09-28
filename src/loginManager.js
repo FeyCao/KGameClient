@@ -48,8 +48,8 @@ LoginManager.prototype.ConnectServer=function()
 		gSocketConn.RegisterEvent("onerror",this.ErrorConnectCallBack);
 		//gSocketConn.Connect('ws://222.66.97.203:5003/');
 		//gSocketConn.Connect('ws://180.169.108.231:5003/');
-		gSocketConn.Connect('ws://192.168.16.250:8484/');//测试
-		//gSocketConn.Connect('ws://192.168.16.250:8384/');//调试
+		//gSocketConn.Connect('ws://192.168.16.250:8484/');//测试
+		gSocketConn.Connect('ws://192.168.16.250:8384/');//调试
 	}
 	else
 	{

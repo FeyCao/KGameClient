@@ -127,12 +127,19 @@ var MatchInfoLayer= cc.Layer.extend({
         this.meBtnStart=new Button("res/meBtnStart.png");
         this.meBtnStart.setPosition(cc.p(363,46));
         this.meBtnStart.setClickEvent(function(){
+            self.meStart();
+        });
+		
+		this.btnStart=new Button("res/btnStart.png");
+        this.btnStart.setPosition(cc.p(363,46));
+        this.btnStart.setClickEvent(function(){
             self.start();
         });
-	
+		
 		this.addChild(this.btnAgain,3);
 		this.addChild(this.btnShare,3);
         this.addChild(this.meBtnStart,3);
+		this.addChild(this.btnStart,3);
 		
 		/*
 		 this.buyButtonImage=new cc.MenuItemImage("res/buy.png","res/buy_p.png",this.buyButtonCallBack);
@@ -309,6 +316,7 @@ var MatchInfoLayer= cc.Layer.extend({
 		this.btnAgain.setVisible(false);
 		this.btnShare.setVisible(false);
         this.meBtnStart.setVisible(false);
+		this.btnStart.setVisible(false);
 		this.speedControlLayer.setVisible(false);
 	},
 	ableSpeedButtons:function()
@@ -346,9 +354,21 @@ var MatchInfoLayer= cc.Layer.extend({
 	buyClick:function()
 	{
 		var klineScene=this.parent.parent;
-		klineScene.buyClick();
+		var i=klineScene.selfOperations.length;
+		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)
+		{
+			console.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
+			console.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
+			return;
+		}	
+		else
+		{
+			klineScene.buyClick();
+			this.setButtonsToBuyPosition();
+		}
 		
-		this.setButtonsToBuyPosition();
+		
+		
 	},
 	
 	buyCloseClick:function()
@@ -362,9 +382,19 @@ var MatchInfoLayer= cc.Layer.extend({
 	sellClick:function()
 	{
 		var klineScene=this.parent.parent;
-		klineScene.sellClick();
+		var i=klineScene.selfOperations.length;
+		if(i>0&&Math.abs(klineScene.selfOperations[i-1])>=klineScene.currentCandleIndex)
+		{
+			console.log("selfOperations[" + i + "] = " + klineScene.selfOperations[i-1]);
+			console.log("drawCandlesAll this.currentCandleIndex = ",klineScene.currentCandleIndex);
+			return;
+		}	
+		else
+		{
+			klineScene.sellClick();
+			this.setButtonsToSellPosition();
+		}
 		
-		this.setButtonsToSellPosition();
 	},
 	
 	sellCloseClick:function()
@@ -432,7 +462,18 @@ var MatchInfoLayer= cc.Layer.extend({
     {
         this.meBtnStart.setVisible(true);
     },
-
+	
+	setStart:function()
+    {
+        this.btnStart.setVisible(true);
+    },
+	
+	start:function()
+	{
+		var klineScene=this.parent.parent;
+		klineScene.setCountDownSprite();
+	},
+	
 	again:function()
 	{
 		if(this.againCallBackFunction!=null)
@@ -448,7 +489,7 @@ var MatchInfoLayer= cc.Layer.extend({
 			this.shareCallBackFunction();
 		}
 	},
-    start:function()
+    meStart:function()
     {
         if(this.startCallBackFunction!=null)
         {

@@ -26,7 +26,7 @@ var KLineScene = SceneBase.extend(
 	middleHorizontalLineCount:11,	//在中间的横线的个数
 	
 	currentCandleIndex:0,		//当前显示的是第几个蜡烛，从0开始
-	CANDAL_DRAW_INTERVAL:200,		//每个K线相隔的时间
+	CANDAL_DRAW_INTERVAL:500,		//每个K线相隔的时间
 	currentCandleDrawInterval:null,	//当前的K线绘画间隔
 	drawCandleStoped:false,			//是否绘画停止了
 	
@@ -556,7 +556,7 @@ var KLineScene = SceneBase.extend(
 		this.removeChild(this.klineLayerMain);
 		this.removeChild(this.volumnTechLayerMain);
 		
-		//先显示前面一副蜡烛图
+		//先显示前面一副蜡烛图（历史数据）
 		this.addChild(this.klineLayerPrev,this.mainLayerNumber,this.klineLayerPrev.getTag());
 
 		this.volumnTechLayerPrev.setKLineData(this.prevKlineData);
@@ -571,9 +571,10 @@ var KLineScene = SceneBase.extend(
 		if(this.matchInfoLayer!=null)
 		{
 			this.matchInfoLayer.disableAllButtons();
+			this.matchInfoLayer.setStart();
 			//this.matchInfoLayer.ableSpeedButtons();
 		}
-		this.setCountDownSprite();
+		//this.setCountDownSprite();
 	},
 	//SHARE_TEST
 	setDataForLlineLayerShare:function()
@@ -598,6 +599,12 @@ var KLineScene = SceneBase.extend(
 			this.countDownSprite.setVisible(false);
 			//this.advanceToMainKline();
 			this.advanceToMainKLine_Phase2();
+			
+			//if(this.matchInfoLayer!=null)
+//		{
+//			this.matchInfoLayer.setStart();
+//			//this.matchInfoLayer.ableSpeedButtons();
+//		}
 			return;
 		}
 		
