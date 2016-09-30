@@ -77,7 +77,7 @@ var ShareLoadScene = SceneBase.extend(
 	
 	messageCallback:function(packet)
 	{
-		console.log("login scene message callback packet.msgType="+packet.msgType+" content="+packet.content.substr(100));
+		console.log("login scene message callback packet.msgType="+packet.msgType);
 		var self=this;
 		if(packet.msgType=="1")
 		{
@@ -112,12 +112,10 @@ var ShareLoadScene = SceneBase.extend(
 		console.log("成功，准备切换到下一个场景");
 		this.stopProgress();
 		
+		var self=this;
+		var userId = self.userId;
+		var matchId = self.matchId;
 		
-		var fields=content.split("#");
-		var len=fields.length;
-		var userId = fields[0];
-		var matchId = fields[1];
-		var score = fields[2];
 		
 		var klineSceneNext=new KLineScene();
 		klineSceneNext.onEnteredFunction=function(){

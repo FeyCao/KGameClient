@@ -346,8 +346,8 @@ var KLineScene = SceneBase.extend(
         var url = "index.html?"+"tittle=mePlay";
         console.log(url);
 
-        //window.open(url);
-        window.location.href=url;
+        window.open(url);
+        //window.location.href=url;
     },
 
 	share:function(content)
@@ -358,8 +358,19 @@ var KLineScene = SceneBase.extend(
 		var userId = fields[0];
 		var matchId = fields[1];
 		var score = fields[2];
+		var text = "";
+		if(score<20)
+		{
+			content = "取得收益"+score+"%25不服点我"
+		}
+		else
+		{
+			content = "取得收益"+score+"%25世界上不超过10人玩到100%25"
+		}
 		
-		var url = "share.html?"+"tittle=share&userId="+userId+"&matchId="+matchId+"&score="+score+"&subtitle=取得收益"+score+"%25subtitleEnd";
+		
+		var url = "share.html?"+"tittle=share&userId="+userId+"&matchId="+matchId+"&head="+"趋势突击&subtitle="+content+"subtitleEnd"
+;
 		//share.html?userId=167&matchId=150
 //		var url = "WebSocketClient.html?"+"userId="+userId+"&matchId="+matchId;取得收益
 		console.log(url);
@@ -594,17 +605,15 @@ var KLineScene = SceneBase.extend(
 	//设置游戏倒计时
 	setCountDownSprite:function()
 	{
+		if(this.matchInfoLayer!=null)
+		{
+			this.matchInfoLayer.disableAllButtons();
+		}
 		if(this.countDownNumber==0 && this.countDownSprite!=null)
 		{
 			this.countDownSprite.setVisible(false);
 			//this.advanceToMainKline();
 			this.advanceToMainKLine_Phase2();
-			
-			//if(this.matchInfoLayer!=null)
-//		{
-//			this.matchInfoLayer.setStart();
-//			//this.matchInfoLayer.ableSpeedButtons();
-//		}
 			return;
 		}
 		
