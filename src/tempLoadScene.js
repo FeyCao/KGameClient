@@ -5,7 +5,8 @@ var TempLoadScene = SceneBase.extend(
 	
 	username:null,
 	password:null,
-	
+	source:null,
+
 	titleSprite:null,
 	
 	loadTime:null,
@@ -33,22 +34,41 @@ var TempLoadScene = SceneBase.extend(
 		this.titleSprit.setPosition(this.width / 2, this.height / 2);
 		this.titleSprit.setScale(1);
 		this.addChild(this.titleSprit, 2,this.titleSprit.getTag());
-		
+
+
+
+
 		if(gLoginManager==null)
 		{
 			gLoginManager=new LoginManager();
 		}
 		
 		var self=this;
-		if(localStorage.lastusername!="" && localStorage.lastusername!=undefined)
-		{
-			var pwd=this.getPasswordFromLocalStorage(localStorage.lastusername);			
-			
-			this.username=localStorage.lastusername;
-			this.password=pwd;
-			
-			gLoginManager.Login(this.username,this.password,null,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
-		}
+        var userId=GetQueryString("userId");
+        var deviceId=GetQueryString("deviceId");
+        var source=GetQueryString("source");
+
+        console.log("userId="+userId+"deviceId="+deviceId+"source="+source);
+
+        if(userId!=null&&deviceId!=null)
+        {
+
+            this.username=userId;
+            this.password=deviceId;
+            this.source=source;
+            gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+            //cc.director.runScene(new MainMenuScene());
+        }
+        //
+		//if(localStorage.lastusername!="" && localStorage.lastusername!=undefined)
+		//{
+		//	var pwd=this.getPasswordFromLocalStorage(localStorage.lastusername);
+		//
+		//	this.username=localStorage.lastusername;
+		//	this.password=pwd;
+		//	console.log("source="+this.source);
+		//	gLoginManager.Login(this.username,this.password,"SWEB",function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+		//}
 		else
 		{
 			gLoginManager.QuickLogin(function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
@@ -98,7 +118,7 @@ var TempLoadScene = SceneBase.extend(
 	
 	messageCallback:function(packet)
 	{
-		console.log("login scene message callback packet.msgType="+packet.msgType+" content="+packet.content);
+		console.log("login scene message callback packet="+packet.msgType+" content="+packet.content);
 		var self=this;
 		if(packet.msgType=="1")
 		{
@@ -106,6 +126,19 @@ var TempLoadScene = SceneBase.extend(
 			//登录成功
 			this.OnLogined(packet.content);
 		}
+        //else if(packet.msgType=="WEBL")
+        //{
+        //    //WEB登录成功
+        //    this.stopProgress();
+        //    this.showMessageBox("登录失败:"+packet.content,function(){self.messageBoxClosed();});
+        //}
+        //else if(packet.msgType=="APPL")
+        //{
+        //    //APP登录成功
+        //    this.stopProgress();
+        //    cc.director.runScene(new MainMenuScene());
+        //    //this.showMessageBox("登录失败:"+packet.content,function(){self.messageBoxClosed();});
+        //}
 		else if(packet.msgType=="2")
 		{
 			//登录失败
@@ -119,10 +152,10 @@ var TempLoadScene = SceneBase.extend(
 			
 			this.username=gPlayerName;
 			this.password=packet.content.split("#")[1];
-			
+			this.source=packet.content.split("#")[2];
 			this.stopProgress();
 			
-			gLoginManager.Login(this.username,this.password,null,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+			gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
 			
 		}
 		else if(packet.msgType=="C")
@@ -139,10 +172,35 @@ var TempLoadScene = SceneBase.extend(
 		}
 	},
 	
-	OnLogined:function(username)
+	OnLogined:function(content)
 	{
-		this.saveCheckboxState();
-		this.moveToNextScene();
+
+
+        this.username=content.split("#")[0];
+        //this.password=packet.content.split("#")[1];
+        this.source=content.split("#")[1];
+
+		//this.saveCheckboxState();
+        console.log( "packet.content="+content+"|this.username="+this.username+"|this.source="+this.source);
+
+        if(this.source=="SWEB"){
+            this.moveToNextScene();
+        }else if(this.source=="DHJK"){
+            console.log("DHJK登录成功，准备切换到下一个场景");
+            this.stopProgress();
+            var mainMenuScene=new MainMenuScene();
+
+            //this.username=userId;
+            //this.password=deviceId;
+            //this.source=source;
+           // gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
+            gSocketConn.RegisterEvent("onmessage",mainMenuScene.messageCallBack);
+            gSocketConn.SendEHMessage(this.username,this.password);
+            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+            cc.director.runScene(mainMenuScene);
+            console.log("DHJK切换场景调用完毕");
+        }
+
 	},
 	
 	

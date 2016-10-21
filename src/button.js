@@ -3,19 +3,12 @@ Button=cc.Sprite.extend({
 	clickevent:null,		//按钮按下的回调函数
 	clickeventparam:null,	//回调函数的参数
 	listener:null,
-	shrinkPixels_Width:null,
-	shrinkPixels_Height:null,
-	shrinkRatioWidth:null,
-	shrinkRatioHeight:null,
 	isPressedDown:false,
 	
 	ctor: function (fileName, rect, rotated)
 	{
 		this._super(fileName, rect, rotated);
-		this.shrinkPixels_Width=4;
-		this.shrinkPixels_Height=4;
-		this.shrinkRatioWidth=(this.width-this.shrinkPixels_Width)/this.width;
-		this.shrinkRatioHeight=(this.height-this.shrinkPixels_Height)/this.height;
+
 	},
 	
 	setClickEvent:function(clickevent)
@@ -98,14 +91,16 @@ Button=cc.Sprite.extend({
 	///当按钮按下去的时候，缩小
 	shrink:function()
 	{
-		var actionNormal=new cc.ScaleTo(0.032,this.shrinkRatioWidth,this.shrinkRatioHeight);
+        var self=this;
+		var actionNormal=new cc.ScaleTo(0.032,self.scale*0.8,self.scale*0.8);
 		this.runAction(actionNormal);
 	},
 	
 	///当按钮弹起来的时候，放大
 	unshrink:function()
 	{
-		var actionNormal=new cc.ScaleTo(0.032,1,1);
+        var self=this;
+        var actionNormal=new cc.ScaleTo(0.032,self.scale*1.25,self.scale*1.25);
 		this.runAction(actionNormal);
 	},
 });

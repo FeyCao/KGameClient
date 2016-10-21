@@ -233,7 +233,7 @@ var KLineScene = SceneBase.extend(
 	
 	messageCallBack:function(message)
 	{
-		console.log("KlineScene messageCallBack..." + message);
+		//console.log("KlineScene messageCallBack..." + message);
 		var packet=Packet.prototype.Parse(message);
 		var self=gKlineScene;
 		if(packet==null) return;
@@ -333,11 +333,8 @@ var KLineScene = SceneBase.extend(
 	matchEndInfoLayer_Share:function()
 	{
 		//分享
-		//this.matchEndInfoLayer.hideLayer();
-		//this.resumeLowerLayer();
 		gSocketConn.SendShareMessage();
 		//分享函数
-		//this.share();
 		
 	},
 
@@ -359,13 +356,13 @@ var KLineScene = SceneBase.extend(
 		var matchId = fields[1];
 		var score = fields[2];
 		var text = "";
-		if(score<20)
+		if(score<100)
 		{
-			content = "取得收益"+score+"%25不服点我"
+			content = "取得收益"+score+"%25%0a不服点我"
 		}
 		else
 		{
-			content = "取得收益"+score+"%25世界上不超过10人玩到100%25"
+			content = "取得收益"+score+"%25%0a世界上不超过10人玩到100%25"
 		}
 		
 		
