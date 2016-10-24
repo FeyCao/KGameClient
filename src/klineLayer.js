@@ -104,7 +104,7 @@ var KlineLayer= BaseGraphLayer.extend({
 	//重载
 	drawCandle:function(candleIndex)
 	{
-		console.log("drawCandle called index="+candleIndex);		
+		//console.log("drawCandle called index="+candleIndex);
 		
 		//开始画this.currentCandleIndex
 		var posX=this.getCandlePosX(candleIndex);

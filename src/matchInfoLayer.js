@@ -135,7 +135,13 @@ var MatchInfoLayer= cc.Layer.extend({
         this.btnStart.setClickEvent(function(){
             self.start();
         });
-		
+
+        this.btnHome=new Button("res/home.png");
+        this.btnHome.setPosition(cc.p(363,46));
+        this.btnHome.setClickEvent(function(){
+            self.meStart();
+        });
+
 		this.addChild(this.btnAgain,3);
 		this.addChild(this.btnShare,3);
         this.addChild(this.meBtnStart,3);
@@ -471,6 +477,7 @@ var MatchInfoLayer= cc.Layer.extend({
 	start:function()
 	{
 		var klineScene=this.parent.parent;
+        gSocketConn.SendBeginMessage();
 		klineScene.setCountDownSprite();
 	},
 	

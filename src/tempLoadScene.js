@@ -44,18 +44,18 @@ var TempLoadScene = SceneBase.extend(
 		}
 		
 		var self=this;
-        var userId=GetQueryString("userId");
-        var deviceId=GetQueryString("deviceId");
-        var source=GetQueryString("source");
+        userInfo.userId=getQueryStringByName("userId");
+        userInfo.deviceId=getQueryStringByName("deviceId");
+        userInfo.source=getQueryStringByName("source");
 
-        console.log("userId="+userId+"deviceId="+deviceId+"source="+source);
+        console.log("userId="+userInfo.userId+"deviceId="+userInfo.deviceId+"source="+userInfo.source);
 
-        if(userId!=null&&deviceId!=null)
+        if(userInfo.userId!=null&&userInfo.deviceId!=null)
         {
 
-            this.username=userId;
-            this.password=deviceId;
-            this.source=source;
+            this.username=userInfo.userId;
+            this.password=userInfo.deviceId;
+            this.source=userInfo.source;
             gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
             //cc.director.runScene(new MainMenuScene());
         }
@@ -183,23 +183,7 @@ var TempLoadScene = SceneBase.extend(
 		//this.saveCheckboxState();
         console.log( "packet.content="+content+"|this.username="+this.username+"|this.source="+this.source);
 
-        if(this.source=="SWEB"){
-            this.moveToNextScene();
-        }else if(this.source=="DHJK"){
-            console.log("DHJK登录成功，准备切换到下一个场景");
-            this.stopProgress();
-            var mainMenuScene=new MainMenuScene();
-
-            //this.username=userId;
-            //this.password=deviceId;
-            //this.source=source;
-           // gLoginManager.Login(this.username,this.password,this.source,function(packet){self.messageCallback(packet)},function(){self.connectErrorCallBack()});
-            gSocketConn.RegisterEvent("onmessage",mainMenuScene.messageCallBack);
-            gSocketConn.SendEHMessage(this.username,this.password);
-            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-            cc.director.runScene(mainMenuScene);
-            console.log("DHJK切换场景调用完毕");
-        }
+        this.moveToNextScene();
 
 	},
 	
@@ -274,14 +258,31 @@ var TempLoadScene = SceneBase.extend(
 	{
 		console.log("登录成功，准备切换到下一个场景");
 		this.stopProgress();
-		var klineSceneNext=new KLineScene();
-		klineSceneNext.onEnteredFunction=function(){
-			klineSceneNext.showProgress();
-		};
-		gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
-		gSocketConn.BeginMatch(0);
-		//cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
-		cc.director.runScene(klineSceneNext);
-		console.log("切换场景调用完毕");
+
+
+        if(this.source=="SWEB"){
+            var klineSceneNext=new KLineScene();
+            klineSceneNext.onEnteredFunction=function(){
+                klineSceneNext.showProgress();
+            };
+            gSocketConn.RegisterEvent("onmessage",klineSceneNext.messageCallBack);
+            gSocketConn.BeginMatch(0);
+            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+            cc.director.runScene(klineSceneNext);
+            console.log("SWEB切换场景调用完毕");
+        }else if(this.source=="DHJK"){
+            var mainMenuScene=new MainMenuScene();
+            //mainMenuScene.onEnteredFunction=function(){
+            //    mainMenuScene.showProgress();
+            //};
+
+            gSocketConn.RegisterEvent("onmessage",mainMenuScene.messageCallBack);
+            gSocketConn.SendEHMessage(this.username,this.password);
+            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+            cc.director.runScene(mainMenuScene);
+            console.log("DHJK切换场景调用完毕");
+        }
+
+
 	}
 });

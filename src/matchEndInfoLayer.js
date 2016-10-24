@@ -158,7 +158,7 @@ var MatchEndInfoLayer= cc.Layer.extend({
 		{
 			this.scoreLabel2.setColor(cc.color(255,255,255,255));
 		}
-		this.scoreLabel2.setString(fields[2]+"%");
+		this.scoreLabel2.setString(ratio.toFixed(2)+"%");
 		console.log(content);
 	}
 	

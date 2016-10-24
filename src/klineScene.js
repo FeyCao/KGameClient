@@ -63,6 +63,9 @@ var KLineScene = SceneBase.extend(
 	onEnter:function () 
 	{
 		this._super();
+        var size = cc.director.getWinSize();
+        var fXScale = size.width/1280;
+        var fYScale = size.height/720;
 		//document.getElementById("mainBody").style
 		document.bgColor="#152936";
 		gKlineScene=this;
@@ -74,6 +77,10 @@ var KLineScene = SceneBase.extend(
 		this.backgroundLayer.ignoreAnchorPointForPosition(false);  
 		this.backgroundLayer.setPosition(size.width / 2, size.height / 2);  
 		this.addChild(this.backgroundLayer, 1,this.backgroundLayer.getTag());
+
+
+
+
 
  		 //设置K线图的区域
 		this.klineLayerMain=new KlineLayer(726,192);
@@ -115,7 +122,14 @@ var KLineScene = SceneBase.extend(
 		macdTais2.isEnabled=false;
 		this.volumnTechLayerMain.addNewTais(macdTais1);
 		this.volumnTechLayerPrev.addNewTais(macdTais2);
-		
+
+
+        this.btnHome=new Button("res/home.png");
+        this.btnHome.setPosition(cc.p(40*fXScale,size.height-35*fYScale));
+        this.btnHome.setScale(fXScale*0.8,fYScale*0.8);
+        this.btnHome.setClickEvent(function(){self.toHome();});
+        this.addChild(this.btnHome,123);
+
 		//调用下面这个函数的时候，可能数据还未获取到，也可能获取到了
 		this.setDataForLlineLayer();
 		
@@ -582,6 +596,10 @@ var KLineScene = SceneBase.extend(
 			this.matchInfoLayer.setStart();
 			//this.matchInfoLayer.ableSpeedButtons();
 		}
+        if(this.btnHome!=null)
+        {
+            this.btnHome.setVisible(true);
+        }
 		//this.setCountDownSprite();
 	},
 	//SHARE_TEST
@@ -602,6 +620,11 @@ var KLineScene = SceneBase.extend(
 	//设置游戏倒计时
 	setCountDownSprite:function()
 	{
+
+        if(this.btnHome!=null)
+        {
+            this.btnHome.setVisible(false);
+        }
 		if(this.matchInfoLayer!=null)
 		{
 			this.matchInfoLayer.disableAllButtons();
@@ -872,4 +895,23 @@ var KLineScene = SceneBase.extend(
 	{
 		this.matchInfoLayer.disableAllButtons();
 	},
+    toHome:function()
+    {
+        if(gMainMenuScene!=null)
+        {
+            gSocketConn.RegisterEvent("onmessage",gMainMenuScene.messageCallBack);
+            gSocketConn.SendEHMessage(userInfo.userId,userInfo.deviceId);
+            //cc.director.runScene(cc.TransitionFade.create(0.5,klineSceneNext,cc.color(255,255,255,255)));
+            cc.director.runScene(gMainMenuScene);
+        }
+        else
+        {
+            //window.close();
+            window.location.href="http://analyse.kiiik.com/";
+            //window.location.href="clear.html";
+        }
+        //this.matchInfoLayer.disableAllButtons();
+    },
+
+
 });

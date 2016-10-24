@@ -116,6 +116,18 @@ SocketConn.prototype.QuickLogin=function()
 	ws.send(quickLoginMsg);
 }
 
+SocketConn.prototype.SendBeginMessage=function()
+{
+    console.log("send sBegin msg= BEGIN||");
+    ws.send("BEGIN||");
+}
+
+SocketConn.prototype.SendRecordMessage=function(matchId,userId)
+{
+    var recordMsg = "Record||"+matchId+"#"+userId+"|";
+    console.log("send Recordmsg=="+recordMsg);
+    ws.send(recordMsg);
+}
 
 SocketConn.prototype.BeginMatch=function(mode)
 {
@@ -158,9 +170,9 @@ SocketConn.prototype.SendEHMessage=function(userId,matchId)
 }
 
 
-SocketConn.prototype.SendZhanjiMessage=function(userId)
+SocketConn.prototype.SendZhanjiMessage=function(userId,pageIdx)
 {
-    var ehMsg="Z|"+userId+"|";
+    var ehMsg="Z|"+userId+"#"+pageIdx+"|";
     console.log("send Z msg="+ehMsg);
     ws.send(ehMsg);
 }
