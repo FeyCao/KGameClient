@@ -1,7 +1,7 @@
 <application>
   <component name="FindSettings">
-    <option name="customScope" value="Project 'KGame'" />
-    <option name="defaultScopeName" value="Project 'KGame'" />
-    <option name="SEARCH_SCOPE" value="Project 'KGame'" />
+    <option name="customScope" value="Directory '/Users/Tom/KGame/src'" />
+    <option name="defaultScopeName" value="Directory '/Users/Tom/KGame/src'" />
+    <option name="SEARCH_SCOPE" value="Directory '/Users/Tom/KGame/src'" />
   </component>
 </application>
